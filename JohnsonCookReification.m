@@ -9,8 +9,8 @@ sheet = ["17-080","17-167", "17-162", "17-166", "17-172"];
 
 for i = 1:length(sheet)
     A = xlsread(filename, sheet(i));
-    A = [A; A(end,1)+0.001,50];
-    A = [A; linspace(A(end,1)+0.002,0.14,10)', linspace(A(end,2)-40,0,10)']; %exp(-linspace(A(end,1)+0.002,0.14,10)')]  %zeros(10,1)];    %concatenate zeros to the end of this variable by making
+    A = [A; A(end,1)+0.001,0];
+    %A = [A; linspace(A(end,1)+0.002,0.14,10)', linspace(A(end,2)-40,0,10)']; %exp(-linspace(A(end,1)+0.002,0.14,10)')]  %zeros(10,1)];    %concatenate zeros to the end of this variable by making
     xq = linspace(0,A(end,1),length(A(:,1)));
     y = A(:,2);
     s(i) = spline(A(:,1), y);
@@ -19,7 +19,7 @@ for i = 1:length(sheet)
     hold on
 end
 
-l = linspace(0,0.083);
+l = linspace(0,0.1226); %0.083); %
 
 for i = 1:length(l)
     for j = 1:length(s)
@@ -77,7 +77,7 @@ xs_test = linspace(0, 0.1226)'; %0.083)';%%max(cellfun(@(c) c(:,1), B(1,:),1:5,'
 
 r = ppval(s(1),xs_test);
 
-for i = 1:length(xs_test) %length(mu{1,1}(:,1))      %It goes the length of the shortest one 
+for i = 1:length(l) %length(mu{1,1}(:,1))      %It goes the length of the shortest one 
     med_of_spl(i,1) = median(py(:,i)); % median(cellfun(@(c) c(i,1), mu(1,:))); %  
 
     mmax(i,1) = max(py(:,i));       %cellfun(@(c) c(i,1), mu(1,:)));
@@ -89,8 +89,8 @@ for i = 1:length(xs_test) %length(mu{1,1}(:,1))      %It goes the length of the 
 end
 
     f2 = [med_of_spl(:,1)+ mdiff(:,1); flipdim(med_of_spl(:,1)-mdiff(:,1),1)];
-    fill([xs_test; flipdim(xs_test,1)], f2, [7 7 7]/8)
-    hold on; plot(xs_test , med_of_spl(:,1));
+    fill([l_mod; flipdim(l_mod,1)], f2, [7 7 7]/8)
+    hold on; plot(l , med_of_spl(:,1));
 
 %    avg_y_mod = avg_y';
 %    %figure
@@ -142,11 +142,11 @@ end
         
         xs = linspace(x_test(k) - 8E-7 , x_test(k) + 8E-7, 10)'; 
     
-        [mu1 var1] = gp(hyp2, @infGaussLik, meanfunc, covfunc, likfunc, B{1,1}(:,1), B{1,1}(:,2), xs);
+        [mu1, var1] = gp(hyp2, @infGaussLik, meanfunc, covfunc, likfunc, B{1,1}(:,1), B{1,1}(:,2), xs);
         y1 = ppval(s(1),xs); %B{1,1}(:,2);% Fun_1(xs); %convert to account for function
         var1 = mu1.^2 + var1;
         
-        [mu2 var2] = gp(hyp2, @infGaussLik, meanfunc, covfunc, likfunc, B{1,2}(:,1), B{1,2}(:,2), xs);
+        [mu2, var2] = gp(hyp2, @infGaussLik, meanfunc, covfunc, likfunc, B{1,2}(:,1), B{1,2}(:,2), xs);
         y2 = ppval(s(2),xs); %B{1,2}(:,2); %convert to account for function
         var2 = mu2.^2 + var2;
 
